@@ -12,7 +12,7 @@ score_t *readsubmat(const char *path);
 void doalign(score_t *submat, int gap, seq_t *s1, seq_t *s2) {
 	align_t *a;
 
-	printf("alignment of \"%s\" (Length %d) and \"%s\" (Length %d):\n", s1->id, s1->len, s2->id, s2->len);
+	printf("Alignment of \"%s\" (Length %d) and \"%s\" (Length %d):\n", s1->id, s1->len, s2->id, s2->len);
 	a = align(submat, gap, s1, s2);
 
 	if (!a) {
