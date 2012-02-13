@@ -5,7 +5,6 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <time.h>
 
 void doalign(score_t *submat, int gap, seq_t *s1, seq_t *s2);
 score_t *readsubmat(const char *path);
@@ -68,8 +67,6 @@ int main(int argc, char **argv) {
 	seq_t *seq;
 	seq_t *p1;
 	seq_t *p2;
-	int n = 0;
-	struct timespec start, end;
 
 	/* argumente: 
 		argv[1] ist gap penalty
@@ -105,12 +102,9 @@ int main(int argc, char **argv) {
 		return EXIT_FAILURE;
 	}
 
-	clock_gettime(CLOCK_REALTIME, &start);
-
 	/* 2 sequenzen */
 	if (!seq->next->next) {
 		doalign(submat, gap, seq, seq->next);
-		n++;
 		printf("\n");
 	}
 
@@ -122,17 +116,13 @@ int main(int argc, char **argv) {
 
 			for (p2 = p1->next; p2; p2 = p2->next) {
 				doalign(submat, gap, p1, p2);
-				n++;
 				printf("\n");
 			}
 			p1 = p1->next;
 		}
 	}
-	clock_gettime(CLOCK_REALTIME, &end);
 
-	printf("%d alignment%s in %.3f seconds\n", n, (n>1) ? "s" : "", (end.tv_sec - start.tv_sec) + ((end.tv_nsec - start.tv_nsec) / 1000000000.0));
 	seqfree(seq);
-
 	free(submat);
 
 	return EXIT_SUCCESS;
