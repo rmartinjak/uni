@@ -3,7 +3,7 @@ SRCDIR=src
 
 CC = cc
 CCFLAGS = -O2 -pedantic -Wall
-LDFLAGS = -lrt
+LDFLAGS =
 
 _OBJ = matrix.o seq.o fasta.o align.o sw.o
 OBJ = $(addprefix $(OBJDIR)/,$(_OBJ))
