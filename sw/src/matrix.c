@@ -3,30 +3,24 @@
 #include <stddef.h>
 
 void **matrixalloc(size_t sz, int n, int m) {
-	int i, k;
 	void **mat;
+	int i;
 
 	mat = malloc(n * sizeof(void *));
-	if (!mat) {
-		return NULL;
-	}
-	for (i=0; i<n; ++i) {
-		mat[i] = malloc(m * sz);
-
-		if (!mat[i]) {
-			for (k=0; k<i; ++k)
-				free(mat[k]);
+	if (mat != NULL) {
+		mat[0] = malloc(n * m * sz);
+		if (mat[0] == NULL) {
 			free(mat);
 			return NULL;
 		}
+
+		for (i = 1; i < n; i++)
+			mat[i] = (char*)mat[i-1] + (m*sz);
 	}
 	return mat;
 }
 
 void matrixfree(void **mat, int n) {
-	int i;
-	for (i=0; i<n; ++i) {
-		free(mat[i]);
-	}
+	free(*mat);
 	free(mat);
 }
