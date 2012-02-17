@@ -4,7 +4,7 @@
 #include "seq.h"
 
 #ifndef PRINTLEN
-#define PRINTLEN 80
+#define PRINTLEN 70
 #endif
 
 typedef short score_t;

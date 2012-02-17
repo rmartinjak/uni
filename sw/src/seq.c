@@ -17,7 +17,6 @@ void fprintaa(FILE *f, const aa_t *a, size_t offset, size_t len) {
 	a += offset;
 	while (len--)
 		fputc(aatoc(*a++), f);
-	fputc('\n', f);
 }
 
 aa_t ctoaa(char c) {

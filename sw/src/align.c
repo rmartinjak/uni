@@ -11,12 +11,19 @@ void fprintalign(FILE *f, const align_t *a) {
 	size_t off=0;
 	size_t len = a->len;
 
-	fprintf(f, "Score: %d, Length: %d\n", a->score, a->len);
+	fprintf(f, "    Score: %d, Length: %d\n\n", a->score, a->len);
 
 	while (off < a->len) {
 		len = (a->len - off > PRINTLEN) ? PRINTLEN : a->len - off;
+
+		fprintf(f, "%5d  ", off+1);
 		fprintaa(f, a->s1, off, len);
+		fprintf(f, "\n");
+
+		fprintf(f, "       ");
 		fprintaa(f, a->s2, off, len);
+		fprintf(f, "\n");
+
 		fprintf(f, "\n");
 		off += PRINTLEN;
 	}
