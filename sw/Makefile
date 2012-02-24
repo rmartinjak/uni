@@ -2,7 +2,7 @@ OBJDIR=obj
 SRCDIR=src
 
 CC = cc
-CCFLAGS = -O2 -pedantic -Wall
+CFLAGS = -O2 -pedantic -Wall
 LDFLAGS =
 
 _OBJ = matrix.o seq.o fasta.o align.o sw.o
@@ -14,10 +14,10 @@ $(OBJDIR) :
 	mkdir $(OBJDIR)
 
 $(OBJDIR)/%.o : $(SRCDIR)/%.c
-	$(CC) $(CCFLAGS) -c -o $@ $<
+	$(CC) $(CFLAGS) -c -o $@ $<
 
 sw : $(OBJDIR) $(OBJ)
-	$(CC) $(CCFLAGS) $(LDFLAGS) -o sw $(OBJ)
+	$(CC) $(LDFLAGS) -o sw $(OBJ)
 
 .PHONY: clean
 
