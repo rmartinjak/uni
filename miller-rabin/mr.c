@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <limits.h>
 #include <time.h>
 
 #define EVEN(n) (!(n & 1))
@@ -9,7 +10,8 @@ unsigned long long mult_mod(unsigned long long a, unsigned long long b, unsigned
 unsigned long long pow_mod(unsigned long long base, unsigned long long exp, unsigned long long mod);
 unsigned long long randull(unsigned long long min, unsigned long long max);
 
-unsigned long long shift_mod(unsigned long long a, unsigned int sh, unsigned long long mod) {
+unsigned long long shift_mod(unsigned long long a, unsigned int sh, unsigned long long mod)
+{
     while (sh--) {
         a <<= 1;
         a %= mod;
@@ -17,7 +19,8 @@ unsigned long long shift_mod(unsigned long long a, unsigned int sh, unsigned lon
     return a;
 }
 
-unsigned long long mult_mod(unsigned long long a, unsigned long long b, unsigned long long mod) {
+unsigned long long mult_mod(unsigned long long a, unsigned long long b, unsigned long long mod)
+{
     unsigned long long ret = 0;
     unsigned int sh = 0;
 
@@ -32,11 +35,12 @@ unsigned long long mult_mod(unsigned long long a, unsigned long long b, unsigned
     return ret;
 }
 
-unsigned long long pow_mod(unsigned long long base, unsigned long long exp, unsigned long long mod) {
+unsigned long long pow_mod(unsigned long long base, unsigned long long exp, unsigned long long mod)
+{
     unsigned long long ret = 1;
-	unsigned long long b;
+    unsigned long long b;
 
-	b = base;
+    b = base;
 
     while (exp)
     {
@@ -49,7 +53,8 @@ unsigned long long pow_mod(unsigned long long base, unsigned long long exp, unsi
     return (unsigned long long)ret;
 }
 
-unsigned long long randull(unsigned long long min, unsigned long long max) {
+unsigned long long randull(unsigned long long min, unsigned long long max)
+{
     unsigned long long ret = 0;
     size_t b;
 
@@ -60,15 +65,16 @@ unsigned long long randull(unsigned long long min, unsigned long long max) {
         srand(time(NULL));
         while (r) {
             rand_bytes++;
-            r >>= 8;
+            r >>= CHAR_BIT;
         }
     }
 
     b = sizeof(unsigned long long);
-    while (b) {
-        ret <<= rand_bytes;
+
+    ret = rand();
+    while ((b -= rand_bytes)) {
+        ret <<= rand_bytes * CHAR_BIT;
         ret |= rand();
-        b -= rand_bytes;
     }
 
     ret %= (max-min);
@@ -76,7 +82,8 @@ unsigned long long randull(unsigned long long min, unsigned long long max) {
     return ret;
 }
 
-int millerrabin(unsigned long long n) {
+int millerrabin(unsigned long long n)
+{
     unsigned long long d, s, i, a;
     int k;
     int r1, r2;
