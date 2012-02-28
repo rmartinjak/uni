@@ -7,12 +7,14 @@
 #define SQ(x) ((#x)[0])
 
 typedef int aa_t;
-typedef struct seq_t {
-	char *id;
-	aa_t *data;
-	size_t len;
-	struct seq_t *next;
-} seq_t;
+typedef struct seq_t
+{
+    char *id;
+    aa_t *data;
+    size_t len;
+    struct seq_t *next;
+}
+seq_t;
 
 #define GAP_CHAR '-'
 #define AA_COUNT 20

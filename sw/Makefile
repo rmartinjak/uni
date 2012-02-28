@@ -17,7 +17,7 @@ $(OBJDIR)/%.o : $(SRCDIR)/%.c
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 sw : $(OBJDIR) $(OBJ)
-	$(CC) $(LDFLAGS) -o sw $(OBJ)
+	$(CC) -o sw $(OBJ) $(LDFLAGS)
 
 .PHONY: clean
 
