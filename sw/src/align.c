@@ -137,7 +137,7 @@ align_t *align(score_t *submat, score_t gap_start, score_t gap_cont, seq_t *s1, 
             if (tmp_max > scmax) {
                 imax = i;
                 kmax = k;
-                scmax = sc;
+                scmax = tmp_max;
             }
         }
     }
