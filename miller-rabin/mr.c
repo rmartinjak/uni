@@ -51,6 +51,16 @@ unsigned long long pow_mod(unsigned long long base, unsigned long long exp, unsi
     return (unsigned long long)ret;
 }
 
+unsigned int randu(void)
+{
+    unsigned int ret = 0;
+    ret = rand() << 1;
+    ret &= ~(INT_MAX);
+    ret |= rand();
+
+    return ret;
+}
+
 unsigned long long randull(unsigned long long min, unsigned long long max)
 {
     unsigned long long ret = 0;
@@ -69,14 +79,13 @@ unsigned long long randull(unsigned long long min, unsigned long long max)
 
     b = sizeof(unsigned long long);
 
-    ret = rand();
+    ret = randu();
     while ((b -= rand_bytes)) {
         ret <<= rand_bytes * CHAR_BIT;
-        ret |= rand();
+        ret |= randu();
     }
 
-    ret %= (max-min);
-    ret += min;
+    ret = min + max * ((double)ret / ULLONG_MAX);
     return ret;
 }
 
