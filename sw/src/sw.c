@@ -13,7 +13,7 @@ void doalign(score_t *submat, score_t gap_start, score_t gap_cont, seq_t *s1, se
 {
     align_t *a;
 
-    printf("Alignment of \"%s\" (Length %d) and \"%s\" (Length %d):\n", s1->id, s1->len, s2->id, s2->len);
+    printf("Alignment of \"%s\" (Length %u) and \"%s\" (Length %u):\n", s1->id, s1->len, s2->id, s2->len);
     a = align(submat, gap_start, gap_cont, s1, s2);
 
     if (!a) {
