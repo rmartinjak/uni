@@ -2,7 +2,7 @@ OBJDIR=obj
 SRCDIR=src
 
 CC = cc
-CFLAGS = -O2 -pedantic -Wall
+CFLAGS = -O2 -ansi -pedantic -Wall
 LDFLAGS =
 
 _OBJ = matrix.o seq.o fasta.o align.o sw.o
