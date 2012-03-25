@@ -2,11 +2,13 @@
 
 #include <stdlib.h>
 #include <limits.h>
-#include <time.h>
 
-#define EVEN(n) (!(n & 1))
+#define EVEN(n) (!(n % 2))
 
 #define WITNESSES 200
+
+#define ULLONG_BIT (sizeof(unsigned long long) * CHAR_BIT)
+
 
 unsigned long long shift_mod(unsigned long long a, unsigned int sh, unsigned long long mod)
 {
@@ -51,42 +53,27 @@ unsigned long long pow_mod(unsigned long long base, unsigned long long exp, unsi
     return (unsigned long long)ret;
 }
 
-unsigned int randu(void)
-{
-    unsigned int ret = 0;
-    ret = rand() << 1;
-    ret &= ~(INT_MAX);
-    ret |= rand();
-
-    return ret;
-}
-
 unsigned long long randull(unsigned long long min, unsigned long long max)
 {
-    unsigned long long ret = 0;
-    size_t b;
+    static size_t rand_bits = 0;
+    size_t bits;
+    unsigned long long rnd = 0;
 
-    static size_t rand_bytes = 0;
-
-    if (rand_bytes == 0) {
-        int r = RAND_MAX;
-        srand(time(NULL));
-        while (r) {
-            rand_bytes++;
-            r >>= CHAR_BIT;
-        }
+    if (!rand_bits)
+    {
+        int r;
+        for (r = RAND_MAX; r > 0; r >>= 1)
+            rand_bits++;
     }
 
-    b = sizeof(unsigned long long);
-
-    ret = randu();
-    while ((b -= rand_bytes)) {
-        ret <<= rand_bytes * CHAR_BIT;
-        ret |= randu();
+    for (bits = 0; bits < ULLONG_BIT; bits += rand_bits)
+    {
+        rnd <<= rand_bits;
+        rnd |= rand();
     }
 
-    ret = min + max * ((double)ret / ULLONG_MAX);
-    return ret;
+    rnd = min + max * ((double)rnd / ULLONG_MAX);
+    return rnd;
 }
 
 int millerrabin(unsigned long long n)
