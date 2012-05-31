@@ -7,6 +7,8 @@
 #include <errno.h>
 #include <stdlib.h>
 
+#define SUBMAT(x, y) submat[(x << 5) + y]
+
 typedef struct dpmat_t
 {
     score_t m;
@@ -21,12 +23,12 @@ void fprintalign(FILE *f, const align_t *a)
     size_t off=0;
     size_t len = a->len;
 
-    fprintf(f, "    Score: %d, Length: %u\n\n", a->score, a->len);
+    fprintf(f, "    Score: %d, Length: %zu\n\n", a->score, a->len);
 
     while (off < a->len) {
         len = (a->len - off > PRINTLEN) ? PRINTLEN : a->len - off;
 
-        fprintf(f, "%5u  ", off+1);
+        fprintf(f, "%5zu  ", off+1);
         fprintaa(f, a->s1, off, len);
         fprintf(f, "\n");
 
@@ -48,7 +50,6 @@ void alignfree(align_t *p)
     free(p);
 }
 
-#define SUBMAT(x, y) submat[(x << 5) + y]
 align_t *align(score_t *submat, score_t gap_start, score_t gap_cont, seq_t *s1, seq_t *s2)
 {
     align_t *a;

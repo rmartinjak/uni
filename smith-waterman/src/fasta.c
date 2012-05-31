@@ -14,6 +14,7 @@ static int fasta_read_id(FILE *f, seq_t *s)
 {
     int c;
     char line[1024];
+    size_t len;
 
     /* id muss mit > beginnen */
     if ((c = fgetc(f)) != '>') {
@@ -23,8 +24,9 @@ static int fasta_read_id(FILE *f, seq_t *s)
 
     /* zeile einlesen und zeilenumbruch abschneiden */
     fgets(line, sizeof(line), f);
-    if (line[strlen(line)-1] == '\n')
-        line[strlen(line)-1] = '\0';
+    len = strlen(line);
+    if (line[len-1] == '\n')
+        line[len-1] = '\0';
 
     /* "leere" ID ist nicht erlaubt */
     if (*line == '\0') {
@@ -32,10 +34,11 @@ static int fasta_read_id(FILE *f, seq_t *s)
         return -1;
     }
     /* id aus zeilenpuffer nach s kopieren */
-    if ((s->id = strdup(line)) == NULL) {
+    if ((s->id = malloc(len+1)) == NULL) {
         errno = ENOMEM;
         return -1;
     }
+    memcpy(s->id, line, len+1);
 
     /* eventuelle kommentarzeilen ueberspringen */
     while ((c = fgetc(f)) == ';') {
