@@ -2,15 +2,13 @@
 warning("off", "Octave:broadcast")
 
 
-function [iter, ProtoMat] = kmeans (DataMat, ProtoMat)
+function [E, iter, ProtoMat] = kmeans (DataMat, ProtoMat)
 	ITER_MAX = 100;
 	EPSILON = 1e-4;
 
 	iter = 0;
-	Eold = 10000;
-	Enew = 1000;
 
-	while ++iter < ITER_MAX && abs(Eold - Enew) > EPSILON
+	while ++iter < ITER_MAX && ((iter == 1) || abs(E(iter) - E(iter-1)) > EPSILON)
 
 		# distance matrix
 		for i = 1:columns(DataMat)
@@ -26,12 +24,16 @@ function [iter, ProtoMat] = kmeans (DataMat, ProtoMat)
 		AssignMat(i, idx) = 1;
 		end
 
+		if !all(sum(AssignMat))
+			1+1
+		endif
+
+
 		for i = 1:columns(ProtoMat)
 		ProtoMat(:,i) = sum(DataMat'.*AssignMat(:,i)) / sum(AssignMat(:,i));
 		end
 
-		Eold = Enew;
-		Enew = sum(sum(DistMat'.*AssignMat));
+		E(iter) = sum(sum(DistMat'.*AssignMat));
 	end
 endfunction
 
@@ -45,6 +47,15 @@ K = 4;
 
 ProtoMat = rand(2, K)
 
-[Iterations, ProtoMat] = kmeans(DataMat, ProtoMat);
+[Error, Iterations, ProtoMat] = kmeans(DataMat, ProtoMat);
 ProtoMat
 Iterations
+Error
+
+
+# for K = 2:10
+# ProtoMat = randperm(columns(DataMat), K);
+# [Error, Iterations, ProtoMat] = kmeans(DataMat, ProtoMat);
+# ProtoMat
+# Iterations
+# Error
