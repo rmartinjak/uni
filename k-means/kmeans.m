@@ -1,43 +1,61 @@
-# turn off warnings about automatic broadcasting
+% turn off warnings about automatic broadcasting
 warning("off", "Octave:broadcast")
 
+function ProtoMat = RandProto(K)
+	ProtoMat = rand(2, K);
+endfunction
 
-function [E, iter, ProtoMat] = kmeans (DataMat, ProtoMat)
+function ProtoMat = RandChoiceProto(K, DataMat)
+	ProtoMat = DataMat(:,randperm(columns(DataMat), K));
+endfunction
+
+function [Error, iter, ProtoMat] = kmeans (DataMat, k, ProtoFun)
 	ITER_MAX = 100;
 	EPSILON = 1e-4;
 
+	E = zeros(ITER_MAX);
 	iter = 0;
 
-	while ++iter < ITER_MAX && ((iter == 1) || abs(E(iter) - E(iter-1)) > EPSILON)
+	ProtoMat = ProtoFun(k, DataMat);
 
-		# distance matrix
+	while ++iter < ITER_MAX && ((iter <= 2) || abs(E(iter-2) - E(iter-1)) > EPSILON)
+
+		% distance matrix
 		for i = 1:columns(DataMat)
-		for k = 1:columns(ProtoMat)
-		DistMat(k,i) = sumsq(DataMat(:,i) - ProtoMat(:,k));
-		end
+			for j = 1:columns(ProtoMat)
+				DistMat(j,i) = sumsq(DataMat(:,i) - ProtoMat(:,j));
+			end
 		end
 
 		AssignMat = zeros(columns(DataMat), columns(ProtoMat));
 
 		for i = 1:columns(DistMat)
-		[val, idx] = min(DistMat(:,i));
-		AssignMat(i, idx) = 1;
+			[val, idx] = min(DistMat(:,i));
+			AssignMat(i, idx) = 1;
 		end
 
+		% check if there is one prototype without assigned data vectors
 		if !all(sum(AssignMat))
-			1+1
+			printf("zomg!\n");
+			ProtoMat = ProtoFun(k, DataMat);
+			iter = 0;
+			continue
 		endif
 
 
 		for i = 1:columns(ProtoMat)
-		ProtoMat(:,i) = sum(DataMat'.*AssignMat(:,i)) / sum(AssignMat(:,i));
+			ProtoMat(:,i) = \
+			sum(DataMat'.*AssignMat(:,i)) / sum(AssignMat(:,i));
 		end
 
-		E(iter) = sum(sum(DistMat'.*AssignMat));
+		 E(iter) = sum(sum(DistMat'.*AssignMat));
+
 	end
+
+	Error = E(1:iter-1);
 endfunction
 
-# data vectors
+% data vectors
 DataMat = [ randn(2, 100).*0.5, \
 	randn(2, 100).*0.5 + [0; 1], \
 	randn(2, 100).*0.5 + [1; 0], \
@@ -45,17 +63,19 @@ DataMat = [ randn(2, 100).*0.5, \
 
 K = 4;
 
-ProtoMat = rand(2, K)
-
-[Error, Iterations, ProtoMat] = kmeans(DataMat, ProtoMat);
+[Error, Iterations, ProtoMat] = kmeans(DataMat, K, @RandProto);
 ProtoMat
 Iterations
-Error
+%plot(Error)
 
 
-# for K = 2:10
-# ProtoMat = randperm(columns(DataMat), K);
-# [Error, Iterations, ProtoMat] = kmeans(DataMat, ProtoMat);
-# ProtoMat
-# Iterations
-# Error
+Iter = zeros(1, 20);
+for K = 1:20
+	Iter(K) = Inf;
+	for i = 1:5
+		[Error, Iterations, ProtoMat] = kmeans(DataMat, K, @RandChoiceProto);
+		Iter(K) = min(Iter(K), Iterations);
+	end
+	Iter
+end
+plot(Iter)
