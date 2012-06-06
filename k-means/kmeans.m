@@ -52,7 +52,7 @@ function [Error, iter, ProtoMat] = kmeans (DataMat, k, ProtoFun)
 
 	end
 
-	Error = E(1:iter-1);
+	Error = E(iter-1);
 endfunction
 
 % data vectors
@@ -69,13 +69,13 @@ Iterations
 %plot(Error)
 
 
-Iter = zeros(1, 20);
-for K = 1:20
-	Iter(K) = Inf;
-	for i = 1:5
+E = zeros(1, 10);
+for K = 2:columns(E)
+	E(K) = Inf;
+	for i = 1:20
 		[Error, Iterations, ProtoMat] = kmeans(DataMat, K, @RandChoiceProto);
-		Iter(K) = min(Iter(K), Iterations);
+		E(K) = min(E(K), Error);
 	end
-	Iter
+	E
 end
-plot(Iter)
+plot(E)
