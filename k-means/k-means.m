@@ -99,18 +99,17 @@ end
 mean(E)
 Ret
 
-%plot(Error)
 
-
-
+%===
 % c)
+%===
 
-% E = zeros(1, 10);
-% for K = 2:columns(E)
-% 	E(K) = Inf;
-% 	for i = 1:20
-% 		[Error, Iterations, ProtoMat] = kmeans(DataMat, K, @RandChoiceProto);
-% 		E(K) = min(E(K), Error);
-% 	end
-% end
-% plot(E(2:end))
+E = zeros(1, 10);
+for K = 2:columns(E)
+	E(K) = Inf;
+	for i = 1:20
+		[Error, Iterations, ProtoMat] = kmeans(DataMat, K, @RandChoiceProto);
+		E(K) = min(E(K), Error);
+	end
+end
+plot(E(2:end))
