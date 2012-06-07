@@ -78,4 +78,4 @@ for K = 2:columns(E)
 	end
 	E
 end
-plot(E)
+plot(E(2:end))
