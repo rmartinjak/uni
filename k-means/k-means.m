@@ -55,7 +55,7 @@ function [Error, Iter, ProtoMat, Retries] = kmeans (DataMat, k, ProtoFun)
 			ProtoMat(:,i) = sum(DataMat'.*AssignMat(:,i)) / sum(AssignMat(:,i));
 		end
 
-		 E(Iter) = sum(sum(DistMat'.*AssignMat));
+		E(Iter) = sum(sum(DistMat'.*AssignMat));
 
 	end
 
