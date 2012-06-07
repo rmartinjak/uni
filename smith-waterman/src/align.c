@@ -21,7 +21,7 @@ dpmat_t;
 void fprintalign(FILE *f, const align_t *a)
 {
     size_t off=0;
-    size_t len = a->len;
+    size_t len;
 
     fprintf(f, "    Score: %d, Length: %zu\n\n", a->score, a->len);
 
@@ -164,12 +164,20 @@ align_t *align(score_t *submat, score_t gap_start, score_t gap_cont, seq_t *s1, 
             k--;
     }
 
+    if (!align_len)
+    {
+        free(a);
+        errno = EIO;
+        return NULL;
+    }
+
     a->s1 = calloc(align_len, sizeof(aa_t));
     a->s2 = calloc(align_len, sizeof(aa_t));
 
     if (!a->s1 || !a->s2) {
         free(a->s1);
         free(a->s2);
+        free(a);
         errno = ENOMEM;
         return NULL;
     }

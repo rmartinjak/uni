@@ -40,7 +40,10 @@ score_t *readsubmat(const char *path)
 
     f = fopen(path, "r");
     if (!f)
+    {
+        free(mat);
         return NULL;
+    }
 
     while (fgets(line, 8, f)) {
         aa1 = (int)ctoaa(line[0]);
@@ -49,6 +52,7 @@ score_t *readsubmat(const char *path)
 
         if (aa1 < 0 || aa2 < 0) {
             fclose(f);
+            free(mat);
             return NULL;
         }
 
@@ -121,8 +125,6 @@ int main(int argc, char **argv)
     else {
         p1 = seq;
         while (p1->next) {
-            p2 = p1->next;
-
             for (p2 = p1->next; p2; p2 = p2->next) {
                 doalign(submat, gap_start, gap_cont, p1, p2);
                 printf("\n");
