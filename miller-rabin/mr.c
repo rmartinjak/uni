@@ -1,16 +1,15 @@
 #include "mr.h"
 
 #include <stdlib.h>
-#include <limits.h>
 
 #define EVEN(n) (!(n % 2))
 
 #define WITNESSES 200
 
-#define ULLONG_BIT (sizeof(unsigned long long) * CHAR_BIT)
+#define UINTMAX_BIT (sizeof(uintmax_t) * CHAR_BIT)
 
 
-unsigned long long shift_mod(unsigned long long a, unsigned int sh, unsigned long long mod)
+uintmax_t shift_mod(uintmax_t a, unsigned int sh, uintmax_t mod)
 {
     while (sh--) {
         a <<= 1;
@@ -19,9 +18,9 @@ unsigned long long shift_mod(unsigned long long a, unsigned int sh, unsigned lon
     return a;
 }
 
-unsigned long long mult_mod(unsigned long long a, unsigned long long b, unsigned long long mod)
+uintmax_t mult_mod(uintmax_t a, uintmax_t b, uintmax_t mod)
 {
-    unsigned long long ret = 0;
+    uintmax_t ret = 0;
     unsigned int sh = 0;
 
     while (b) {
@@ -35,10 +34,10 @@ unsigned long long mult_mod(unsigned long long a, unsigned long long b, unsigned
     return ret;
 }
 
-unsigned long long pow_mod(unsigned long long base, unsigned long long exp, unsigned long long mod)
+uintmax_t pow_mod(uintmax_t base, uintmax_t exp, uintmax_t mod)
 {
-    unsigned long long ret = 1;
-    unsigned long long b;
+    uintmax_t ret = 1;
+    uintmax_t b;
 
     b = base;
 
@@ -50,14 +49,14 @@ unsigned long long pow_mod(unsigned long long base, unsigned long long exp, unsi
         exp >>= 1;
         b = mult_mod(b, b, mod);
     }
-    return (unsigned long long)ret;
+    return (uintmax_t)ret;
 }
 
-unsigned long long randull(unsigned long long min, unsigned long long max)
+uintmax_t randumax(uintmax_t min, uintmax_t max)
 {
     static size_t rand_bits = 0;
     size_t bits;
-    unsigned long long rnd = 0;
+    uintmax_t rnd = 0;
 
     if (!rand_bits)
     {
@@ -66,19 +65,19 @@ unsigned long long randull(unsigned long long min, unsigned long long max)
             rand_bits++;
     }
 
-    for (bits = 0; bits < ULLONG_BIT; bits += rand_bits)
+    for (bits = 0; bits < UINTMAX_BIT; bits += rand_bits)
     {
         rnd <<= rand_bits;
         rnd |= rand();
     }
 
-    rnd = min + max * ((double)rnd / ULLONG_MAX);
+    rnd = min + max * ((double)rnd / UINTMAX_MAX);
     return rnd;
 }
 
-int millerrabin(unsigned long long n)
+int millerrabin(uintmax_t n)
 {
-    unsigned long long d, s, i, a;
+    uintmax_t d, s, i, a;
     int k;
     int r1, r2;
 
@@ -94,7 +93,7 @@ int millerrabin(unsigned long long n)
     }
 
     for (k = 0; k < WITNESSES; k++) {
-        a = randull(2, n-2);
+        a = randumax(2, n-2);
         r1 = 0;
         r2 = 0;
 
