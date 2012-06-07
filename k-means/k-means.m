@@ -10,11 +10,11 @@ end
 
 function ProtoMat = RandProto(K)
 	ProtoMat = rand(2, K);
-endfunction
+end
 
 function ProtoMat = RandChoiceProto(K, DataMat)
 	ProtoMat = DataMat(:,randperm(columns(DataMat), K));
-endfunction
+end
 
 function [Error, Iter, ProtoMat, Retries] = kmeans (DataMat, k, ProtoFun)
 	ITER_MAX = 100;
@@ -48,7 +48,7 @@ function [Error, Iter, ProtoMat, Retries] = kmeans (DataMat, k, ProtoFun)
 			Iter = 0;
 			++Retries;
 			continue
-		endif
+		end
 
 
 		for i = 1:columns(ProtoMat)
@@ -60,7 +60,7 @@ function [Error, Iter, ProtoMat, Retries] = kmeans (DataMat, k, ProtoFun)
 	end
 
 	Error = E(Iter-1);
-endfunction
+end
 
 
 %====
