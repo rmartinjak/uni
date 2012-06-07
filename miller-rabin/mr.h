@@ -1,5 +1,13 @@
-#include <stdint.h>
 #include <limits.h>
+
+#if __STDC_VERSION__ >= 199901L
+#include <stdint.h>
+#include <inttypes.h>
+#else
+typedef unsigned long uintmax_t;
+#define UINTMAX_MAX ULONG_MAX
+#define PRIuMAX "lu"
+#endif
 
 uintmax_t shift_mod(uintmax_t a, unsigned int sh, uintmax_t mod);
 uintmax_t mult_mod(uintmax_t a, uintmax_t b, uintmax_t mod);
