@@ -1,15 +1,17 @@
 % turn off warnings about automatic broadcasting
 warning('off', 'Octave:broadcast')
 
+
 function DataMat = GenDataMat()
-	DataMat = [ randn(2, 100).*0.5, \
-		randn(2, 100).*0.5 + [0; 1], \
-		randn(2, 100).*0.5 + [1; 0], \
-		randn(2, 100).*0.5 + [1; 1] ];
+	dev = 0.25;
+	DataMat = [ randn(2, 100).*dev,  \
+		randn(2, 100).*dev + [0; 1], \
+		randn(2, 100).*dev + [1; 0], \
+		randn(2, 100).*dev + [1; 1] ];
 end
 
-function ProtoMat = RandProto(K)
-	ProtoMat = rand(2, K);
+function ProtoMat = RandProto(K, DataMat)
+	ProtoMat = rand(rows(DataMat), K);
 end
 
 function ProtoMat = RandChoiceProto(K, DataMat)
@@ -17,13 +19,11 @@ function ProtoMat = RandChoiceProto(K, DataMat)
 end
 
 function [Error, Iter, ProtoMat, Retries] = kmeans (DataMat, k, ProtoFun)
-	ITER_MAX = 100;
 	EPSILON = 1e-4;
-
+	ITER_MAX = 100;
 	E = zeros(ITER_MAX);
 	Iter = 0;
 	Retries = 0;
-
 
 	ProtoMat = ProtoFun(k, DataMat);
 
@@ -46,7 +46,7 @@ function [Error, Iter, ProtoMat, Retries] = kmeans (DataMat, k, ProtoFun)
 		if !all(sum(AssignMat))
 			ProtoMat = ProtoFun(k, DataMat);
 			Iter = 0;
-			++Retries;
+			Retries += 1;
 			continue
 		end
 
@@ -67,18 +67,20 @@ end
 % a)
 %====
 
-K = 4;
-E = zeros(1, 50);
-Ret = 0;
-for Iter = 1:50
-	DataMat = GenDataMat();
-	[Error, Iterations, ProtoMat, Retries] = kmeans(DataMat, K, @RandProto);
-	E(Iter) = Error;
-	Ret += Retries;
-end
+function ex_a (iterations)
+	K = 4;
+	E = zeros(1, iterations);
+	Ret = 0;
+	for Iter = 1:iterations
+		DataMat = GenDataMat();
+		[Error, Iterations, ProtoMat, Retries] = kmeans(DataMat, K, @RandProto);
+		E(Iter) = Error;
+		Ret += Retries;
+	end
 
-mean(E)
-Ret
+	mean(E)
+	Ret
+end
 
 
 
@@ -86,30 +88,37 @@ Ret
 % b)
 %====
 
-K = 4;
-E = zeros(1, 50);
-Ret = 0;
-for Iter = 1:50
-	DataMat = GenDataMat();
-	[Error, Iterations, ProtoMat, Retries] = kmeans(DataMat, K, @RandChoiceProto);
-	E(Iter) = Error;
-	Ret += Retries;
-end
-
-mean(E)
-Ret
-
-
-%===
-% c)
-%===
-
-E = zeros(1, 10);
-for K = 2:columns(E)
-	E(K) = Inf;
-	for i = 1:20
-		[Error, Iterations, ProtoMat] = kmeans(DataMat, K, @RandChoiceProto);
-		E(K) = min(E(K), Error);
+function ex_b (iterations)
+	K = 4;
+	E = zeros(1, iterations);
+	Ret = 0;
+	for Iter = 1:iterations
+		DataMat = GenDataMat();
+		[Error, Iterations, ProtoMat, Retries] = kmeans(DataMat, K, @RandChoiceProto);
+		E(Iter) = Error;
+		Ret += Retries;
 	end
+
+	mean(E)
+	Ret
 end
-plot(E(2:end))
+
+
+%====
+% c)
+%====
+
+function ex_c (iterations)
+	E = zeros(1, 10);
+	for K = 2:columns(E)
+		E(K) = Inf;
+		for i = 1:iterations
+			[Error, Iterations, ProtoMat] = kmeans(DataMat, K, @RandChoiceProto);
+			E(K) = min(E(K), Error);
+		end
+	end
+	plot(E(2:end))
+end
+
+ex_a(20)
+ex_b(20)

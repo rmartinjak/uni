@@ -128,7 +128,10 @@ seq_t *fasta_read(const char *path)
 
     f = fopen(path, "r");
     if (!f)
+    {
+        free(ret);
         return NULL;
+    }
 
     /* abwechselnd id und daten lesen, bei fehler oder EOF abbruch */
     while (1) {
