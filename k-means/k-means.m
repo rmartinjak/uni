@@ -20,9 +20,9 @@ end
 
 function Hmat = mkAssign(Dmat)
 	Hmat = zeros(size(Dmat'));
+	[vals, idx] = min(Dmat);
 	for i = 1:columns(Dmat)
-		[val, idx] = min(Dmat(:,i));
-		Hmat(i, idx) = 1;
+		Hmat(i, idx(i)) = 1;
 	end
 end
 
@@ -59,7 +59,7 @@ function [Error, Iter, Pmat, Retries] = kmeans (Xmat, k, ProtoFun)
 		% calculate new prototypes
 		Pmat = Xmat * Hmat ./ sum(Hmat);
 
-		E(Iter) = sum(sum(Dmat'.*Hmat));
+		E(Iter) = sum(sum(Dmat'.*Hmat)) / columns(Xmat);
 
 		end
 
