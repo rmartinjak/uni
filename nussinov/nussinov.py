@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 MIN_DIST = 3
 
 class Stack(object):
