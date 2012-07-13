@@ -2,21 +2,6 @@
 
 MIN_DIST = 3
 
-class Stack(object):
-    def __init__(self):
-        self.items = []
-
-    def push(self, data):
-        self.items.append(data)
-
-    def pop(self):
-        return self.items.pop()
-
-    def __iter__(self):
-        while len(self.items) > 0:
-            yield self.items.pop()
-
-
 def fasta_read(filename):
     with open(filename) as f:
         line = f.readline()
@@ -75,11 +60,11 @@ def nussinov(seq):
                 )
 
     # traceback
-    s = Stack()
     result = []
-    s.push((0, seq_length-1))
-    for p in s:
-        i, j = p
+    stack = [(0, seq_length-1)]
+    while len(stack) > 0:
+        i, j = stack.pop()
+
         if  j - i <= MIN_DIST:
             continue
 
@@ -87,14 +72,14 @@ def nussinov(seq):
 
         if x == mat[i+1][j-1] + pair(seq[i], seq[j]):
             if pair(seq[i], seq[j]) > 0:
-                result.append(p)
-            s.push((i+1, j-1))
+                result.append((i, j))
+            stack.append((i+1, j-1))
 
         elif x == mat[i+1][j]:
-            s.push((i+1, j))
+            stack.append((i+1, j))
 
         elif x == mat[i][j-1]:
-            s.push((i, j-1))
+            stack.append((i, j-1))
 
         else:
             mx = 0
@@ -107,8 +92,8 @@ def nussinov(seq):
 
             if mx_k == -1:
                 raise ValueError
-            s.push((i, k))
-            s.push((k+1, j))
+            stack.append((i, k))
+            stack.append((k+1, j))
 
     return result
 
