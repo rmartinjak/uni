@@ -111,16 +111,10 @@ if __name__ == '__main__':
             print(seq_id)
             pairs = nussinov(seq)
 
-            for i in range(0, len(seq)):
-                opn = [True for t in pairs if t[0] == i]
-                cls = [True for t in pairs if t[1] == i]
+            p = [ '-' ] * len(seq)
+            for opn, cls in pairs:
+                p[opn] = '('
+                p[cls] = ')'
 
-                if opn != []:
-                    p += '('
-                elif cls != []:
-                    p += ')'
-                else:
-                    p += '-'
-
-            print(p)
+            print(''.join(p))
             print(seq)
