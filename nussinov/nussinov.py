@@ -46,16 +46,14 @@ def pairing_score(x, y):
 def nussinov(seq):
     """Returns a list of tuples with the indexes of paired nucleotides."""
 
-    seq_length = len(seq)
+    N = len(seq)
 
     # create empty matrix
-    mat = []
-    for i in range(seq_length):
-        mat.append([0] * seq_length)
+    mat = [[0] * N for i in range(N)]
 
     # fill matrix
-    for n in range(MIN_DIST-1, seq_length):
-        for j in range(n, seq_length):
+    for n in range(MIN_DIST-1, N):
+        for j in range(n, N):
             i = j-n
             mat[i][j] = max(
                 mat[i+1][j-1] + pairing_score(seq[i], seq[j]),
@@ -66,7 +64,7 @@ def nussinov(seq):
 
     # traceback
     result = []
-    stack = [ (0, seq_length-1) ]
+    stack = [ (0, N-1) ]
     while len(stack) > 0:
         i, j = stack.pop()
 
