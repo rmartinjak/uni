@@ -3,7 +3,7 @@
 MIN_DIST = 3
 
 def fasta_read(filename):
-    """Generator function to read all IDs and sequences from a fasta file"""
+    """Generator function to read all IDs and sequences from a fasta file."""
     with open(filename) as f:
         line = f.readline()
         while 1:
@@ -25,7 +25,7 @@ def fasta_read(filename):
 
 
 def pairing_score(x, y):
-    """Returns the 'pairing score' of two nucleotides"""
+    """Returns the 'pairing score' of two nucleotides."""
     x = x.upper()
     y = y.upper()
 
@@ -44,7 +44,7 @@ def pairing_score(x, y):
 
 
 def nussinov(seq):
-    """Returns a list of tuples with the indexes of paired nucleotides"""
+    """Returns a list of tuples with the indexes of paired nucleotides."""
 
     seq_length = len(seq)
 
