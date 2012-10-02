@@ -1,4 +1,12 @@
 
+function x = rows(mat)
+	x = size(mat, 1);
+end
+function x = columns(mat)
+	x = size(mat, 2);
+end
+
+
 function c = ITER_MAX()
 	c = 100;
 end
@@ -43,12 +51,16 @@ function [Error, Evec, Iter, Retries, Pmat] = kmeans (Xmat, K, ProtoFun)
 	Evec = zeros(1, ITER_MAX);
 	Evec(1) = Inf;
 	i = 1;
-	while ((i == 1) || abs(Evec(i) - Evec(i-1)) > EPSILON) && i++ <= ITER_MAX
+	while ((i == 1) || abs(Evec(i) - Evec(i-1)) > EPSILON) && ++i < ITER_MAX
+		% calculate distance matrix
 		Dmat = mkDist(Xmat, Pmat);
+
+		% calculate vector-prototype assignment matrix
 		Hmat = mkAssign(Dmat);
 
 		% check if there is one prototype without assigned data vectors
 		if !all(sum(Hmat))
+			% reinitialize prototype matrix and "restart"
 			Pmat = ProtoFun(Xmat, K);
 			i = 1;
 			Retries++;
@@ -58,8 +70,10 @@ function [Error, Evec, Iter, Retries, Pmat] = kmeans (Xmat, K, ProtoFun)
 		% calculate new prototypes
 		Pmat = Xmat * Hmat ./ repmat(sum(Hmat), rows(Xmat), 1);
 
+		% calculate error
 		Error = sum(mean(Dmat'.*Hmat));
 		Evec(i) = Error;
+
 		end
 		Iter = i;
 end
