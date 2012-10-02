@@ -95,13 +95,13 @@ def nussinov(seq):
 
 
 if __name__ == '__main__':
-    from sys import argv, exit
+    import sys
 
-    if len(argv) < 2:
-        print("usage: %s <file> [<file2>...]" % argv[0])
-        exit(1)
+    if len(sys.argv) < 2:
+        print("usage: %s <file> [<file2>...]" % sys.argv[0])
+        sys.exit(1)
 
-    for f in argv[1:]:
+    for f in sys.argv[1:]:
         for seq_id, seq_data in fasta_read(f):
             print(seq_id)
 
