@@ -45,7 +45,6 @@ def pairing_score(x, y):
 
 def nussinov(seq):
     """Returns a list of tuples with the indexes of paired nucleotides."""
-
     N = len(seq)
 
     # create empty matrix
