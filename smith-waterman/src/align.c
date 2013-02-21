@@ -68,7 +68,7 @@ align_t *align(score_t *submat, score_t gap_start, score_t gap_cont, seq_t *s1, 
         return NULL;
     }
 
-    if ((dp_mat = (dpmat_t **)matrixalloc(sizeof(dpmat_t), s1->len+1, s2->len+1)) == NULL) {
+    if ((dp_mat = matrixalloc(sizeof(dpmat_t), s1->len+1, s2->len+1)) == NULL) {
         errno = ENOMEM;
         return NULL;
     }
@@ -216,7 +216,7 @@ align_t *align(score_t *submat, score_t gap_start, score_t gap_cont, seq_t *s1, 
         a2--;
     }
 
-    matrixfree((void **)dp_mat, s1->len+1);
+    matrixfree(dp_mat);
 
     return a;
 }

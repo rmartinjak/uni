@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stddef.h>
 
-void **matrixalloc(size_t sz, int n, int m)
+void *matrixalloc(size_t sz, int n, int m)
 {
     void **mat;
     int i;
@@ -21,8 +21,9 @@ void **matrixalloc(size_t sz, int n, int m)
     return mat;
 }
 
-void matrixfree(void **mat, int n)
+void matrixfree(void *mat)
 {
-    free(*mat);
+    void **m = mat;
+    free(*m);
     free(mat);
 }
